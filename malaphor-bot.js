@@ -1,5 +1,4 @@
 import { Client, Intents } from 'discord.js';
-import axios from 'axios';
 import { readFileSync } from 'fs';
 import dotenv from 'dotenv';
 import { Routes } from 'discord-api-types/v9';
@@ -42,8 +41,6 @@ async function setupMalaphorCommand() {
         'type': 1,
         'description': 'Get a malaphor'
     };
-    const url = `https://discord.com/api/v8/applications/${MALAPHOR_CLIENT_ID}/commands`;
-    const headers = { "Authorization": `Bot ${MALAPHOR_TOKEN}` };
 
     const rest = new REST({ version: '9' }).setToken(MALAPHOR_TOKEN);
 
