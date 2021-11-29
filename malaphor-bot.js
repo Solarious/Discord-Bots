@@ -1,27 +1,23 @@
-import { Client, Intents } from 'discord.js';
 import { readFileSync } from 'fs';
+import { setupClient, setupCommand } from './util.js';
+
 import dotenv from 'dotenv';
-import { Routes } from 'discord-api-types/v9';
-import { REST } from '@discordjs/rest';
 dotenv.config();
 
 const {
     MALAPHOR_TOKEN,
-    //MOTD_CHANNEL,
     MALAPHORS_FILE,
     MALAPHOR_CLIENT_ID,
     GUILD_ID
 } = process.env;
 
 export async function createMalaphorBot() {
-    const intents = new Intents();
-    intents.add(Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES);
-    const client = new Client({ intents });
-
-    await client.login(MALAPHOR_TOKEN);
+    const client = await setupClient();
 
     client.once('ready', async () => {
+        console.log('Setting up malaphor bot');
         await setupMalaphorCommand();
+        console.log('Malaphor bot ready');
     });
 
     client.on('interactionCreate', async interaction => {
@@ -31,6 +27,8 @@ export async function createMalaphorBot() {
             await malaphorInteraction(interaction);
         }
     });
+
+    await client.login(MALAPHOR_TOKEN);
 
     return client;
 }
@@ -42,25 +40,7 @@ async function setupMalaphorCommand() {
         'description': 'Get a malaphor'
     };
 
-    const rest = new REST({ version: '9' }).setToken(MALAPHOR_TOKEN);
-
-    try {
-        //await axios.post(url, json, headers);
-        await rest.put(
-            Routes.applicationGuildCommands(MALAPHOR_CLIENT_ID, GUILD_ID), { body: [json] }
-        );
-        console.log('Malaphor command setup');
-    } catch (error) {
-        console.log('Error setting up malaphor command');
-        if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-        } else if (error.request) {
-            console.log(error.request);
-        } else {
-            console.log(error.message);
-        }
-    }
+    await setupCommand(MALAPHOR_TOKEN, MALAPHOR_CLIENT_ID, GUILD_ID, json);
 }
 
 async function malaphorInteraction(interaction) {
