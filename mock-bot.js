@@ -6,8 +6,11 @@ dotenv.config();
 const {
     MOCK_TOKEN,
     MOCK_CLIENT_ID,
-    GUILD_ID
+    GUILD_ID,
+    MOCK_PROBABILITY
 } = process.env;
+
+const MOCK_PROBABILITY_INT = parseFloat(MOCK_PROBABILITY);
 
 export async function createMockBot() {
     const client = await setupClient();
@@ -28,6 +31,14 @@ export async function createMockBot() {
             if (interaction.commandName === 'mockmessage') {
                 mockMessageInteraction(interaction);
             }
+        }
+    });
+
+    client.on('messageCreate', async message => {
+        if (message.author.bot || message.content.trim() === '') return;
+        if (Math.random() < MOCK_PROBABILITY_INT) {
+            const msg = mockify(message.content);
+            await message.reply(msg);
         }
     });
 
