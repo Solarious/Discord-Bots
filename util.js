@@ -11,16 +11,18 @@ export async function setupClient() {
     return client;
 }
 
-export async function setupCommand(token, clientId, guildId, json) {
+export async function setupCommands(token, clientId, guildId, ...commands) {
     const rest = new REST({ version: '9' }).setToken(token);
+
+    const commandNames = commands.map(c => c.name).join(', ');
 
     try {
         await rest.put(
-            Routes.applicationGuildCommands(clientId, guildId), { body: [json] }
+            Routes.applicationGuildCommands(clientId, guildId), { body: commands }
         );
-        console.log(`Command setup: ${json.name}`);
+        console.log(`Commands setup: ${commandNames}`);
     } catch (error) {
-        console.log(`Error setting up command ${json.name}`);
+        console.log(`Error setting up commands ${commandNames}`);
         if (error.response) {
             console.log(error.response.data);
             console.log(error.response.status);

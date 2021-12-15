@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { setupClient, setupCommand } from './util.js';
+import { setupClient, setupCommands } from './util.js';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -16,7 +16,7 @@ export async function createMalaphorBot() {
 
     client.once('ready', async () => {
         console.log('Setting up malaphor bot');
-        await setupMalaphorCommand();
+        await setupCommands(MALAPHOR_TOKEN, MALAPHOR_CLIENT_ID, GUILD_ID, malaphorJson);
         console.log('Malaphor bot ready');
     });
 
@@ -33,15 +33,11 @@ export async function createMalaphorBot() {
     return client;
 }
 
-async function setupMalaphorCommand() {
-    const json = {
-        'name': 'malaphor',
-        'type': 1,
-        'description': 'Get a malaphor'
-    };
-
-    await setupCommand(MALAPHOR_TOKEN, MALAPHOR_CLIENT_ID, GUILD_ID, json);
-}
+const malaphorJson = {
+    'name': 'malaphor',
+    'type': 1,
+    'description': 'Get a malaphor'
+};
 
 async function malaphorInteraction(interaction) {
     const malaphors = LoadMalaphors();
