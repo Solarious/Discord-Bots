@@ -95,8 +95,6 @@ async function mockUsersLastMessageInteraction(interaction) {
             limit: 100,
             before
         });
-        console.log(i);
-        console.log(messages.firstKey());
         if (messages.size == 0) break;
 
         const usersMessages = messages.filter(m => m.author?.id == interaction.options.getUser('user').id);
@@ -104,7 +102,7 @@ async function mockUsersLastMessageInteraction(interaction) {
             const message = usersMessages.first();
             const text = message.content;
             const mocked = mockify(text);
-            await message.reply(mocked);
+            await message.reply(`${mocked}\nAs requested by ${interaction.member.user}`);
             await interaction.editReply('Message found and mocked');
             return;
         }
