@@ -8,8 +8,11 @@ const {
     MALAPHOR_TOKEN,
     MALAPHORS_FILE,
     MALAPHOR_CLIENT_ID,
+    MALAPHOR_PROBABILITY,
     GUILD_ID
 } = process.env;
+
+const MALAPHOR_PROBABILITY_FLOAT = parseFloat(MALAPHOR_PROBABILITY);
 
 export async function createMalaphorBot() {
     const client = await setupClient();
@@ -28,6 +31,14 @@ export async function createMalaphorBot() {
         }
     });
 
+    client.on('messageCreate', async message => {
+        if (message.author.bot || message.content.trim() === '') return;
+        if (Math.random() < MALAPHOR_PROBABILITY_FLOAT) {
+            const msg = 'Well you know what they say\n' + GetRandomMalaphor();
+            await message.reply(msg);
+        }
+    });
+
     await client.login(MALAPHOR_TOKEN);
 
     return client;
@@ -40,9 +51,13 @@ const malaphorJson = {
 };
 
 async function malaphorInteraction(interaction) {
-    const malaphors = LoadMalaphors();
-    const malaphor = selectRandom(malaphors);
+    const malaphor = GetRandomMalaphor();
     await interaction.reply(malaphor);
+}
+
+function GetRandomMalaphor() {
+    const malaphors = LoadMalaphors();
+    return selectRandom(malaphors);
 }
 
 function LoadMalaphors() {
