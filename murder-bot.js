@@ -5,7 +5,7 @@ dotenv.config();
 
 const {
     MURDER_TOKEN,
-    MURDER_PROBALILITY
+    MURDER_PROBABILITY
 } = process.env;
 
 const MURDER_PROBABILITY_FLOAT = parseFloat(MURDER_PROBABILITY);
@@ -20,7 +20,7 @@ export async function createMurderBot() {
 
     client.on('messageCreate', async message => {
         if (message.author.bot || message.content.trim() === '') return;
-        if (Math.random() < MURDER_PROBALILITY_FLOAT) {
+        if (Math.random() < MURDER_PROBABILITY_FLOAT) {
             await message.reply('...');
         }
     });
