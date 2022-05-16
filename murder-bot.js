@@ -8,6 +8,8 @@ const {
     MURDER_PROBALILITY
 } = process.env;
 
+const MURDER_PROBABILITY_FLOAT = parseFloat(MURDER_PROBABILITY);
+
 export async function createMurderBot() {
     const client = await setupClient();
 
@@ -18,7 +20,7 @@ export async function createMurderBot() {
 
     client.on('messageCreate', async message => {
         if (message.author.bot || message.content.trim() === '') return;
-        if (Math.random() < MURDER_PROBALILITY) {
+        if (Math.random() < MURDER_PROBALILITY_FLOAT) {
             await message.reply('...');
         }
     });
