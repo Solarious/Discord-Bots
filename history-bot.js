@@ -192,7 +192,7 @@ async function quoteInteraction(interaction) {
         let msg = result[0];
         await interaction.reply({
             content: `In the wise words of ${msg.user.name}:\n${msg.content}`,
-            ephemeral: true
+            ephemeral: false
         });
     } else {
         await interaction.reply({
